@@ -7,11 +7,11 @@ const DashLayout = ({ children }: { children: React.ReactNode }) => {
       <div>
         <Navbar />
       </div>
-      <div className="h-full flex">
-        <div>
+      <div className="h-full flex ">
+        <div className="sticky left-0 overflow-y-hidden border-r">
           <Sidebar />
         </div>
-        <div className="h-[80px] p-6"> {children}</div>
+        <div className="w-full  p-6 overflow-auto  "> {children}</div>
       </div>
     </div>
   );
