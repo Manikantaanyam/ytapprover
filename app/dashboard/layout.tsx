@@ -11,7 +11,7 @@ const DashLayout = ({ children }: { children: React.ReactNode }) => {
         <div className="sticky left-0 overflow-y-hidden border-r">
           <Sidebar />
         </div>
-        <div className="w-full  p-6 overflow-auto  "> {children}</div>
+        <div className="w-full p-6 overflow-auto "> {children}</div>
       </div>
     </div>
   );

@@ -6,9 +6,16 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { VideoIcon } from "lucide-react";
 import { useRef, useState } from "react";
+
+
 const page = () => {
-  const fileInputRef = useRef(null);
-  const [videoUrl, setVideoUrl] = useState("");
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [videoUrl, setVideoUrl] = useState<string>("");
+  const [title, setTitle] = useState<string>("");
+  const [desc, setDesc] = useState<string>("");
+  const [tags, setTags] = useState<string>("");
+  const [visibility, setVisibility] = useState<string>("");
+  const [madeForKids, setMadeForKids] = useState<string>("");
 
   const handleIconClick = () => {
     if (fileInputRef.current) {
@@ -16,12 +23,30 @@ const page = () => {
     }
   };
 
-  const handleVideoUpload = (e) => {
-    const video = e.target.files[0];
-    if (video) {
-      const url = URL.createObjectURL(video);
+  const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
       setVideoUrl(url);
     }
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+    changer: React.Dispatch<React.SetStateAction<string>>
+  ) => {
+    changer(e.target.value);
+  };
+
+  const handleUpload = () => {
+    console.log("titie:", title);
+    console.log("desc:", desc);
+    console.log("tags:", tags);
+    console.log("visibility:", visibility);
+    console.log("made:", madeForKids);
+    console.log("made:", videoUrl);
   };
 
   return (
@@ -40,7 +65,7 @@ const page = () => {
           <VideoIcon width={50} height={100} />
         )}
       </AspectRatio>
-      <Button onClick={handleIconClick}>Upload</Button>
+      <Button onClick={handleIconClick}>Upload a video</Button>
       <input
         onChange={handleVideoUpload}
         ref={fileInputRef}
@@ -53,6 +78,9 @@ const page = () => {
         <Label htmlFor="title">Title</Label>
         <Input
           type="text"
+          onChange={(e) => {
+            setTitle(e.target.value);
+          }}
           placeholder="Title of the video"
           className="w-full"
         />
@@ -60,6 +88,9 @@ const page = () => {
       <div className="flex flex-col gap-y-3">
         <Label htmlFor="description">Description</Label>
         <Textarea
+          onChange={(e) => {
+            setDesc(e.target.value);
+          }}
           placeholder="Description of the video"
           className="w-full h-[200px]"
         />
@@ -68,6 +99,9 @@ const page = () => {
       <div className="flex flex-col gap-y-3">
         <Label htmlFor="tags">Tags</Label>
         <Input
+          onChange={(e) => {
+            setTags(e.target.value);
+          }}
           type="text"
           placeholder="e.g., movies, films, new movies, top10movies"
           className="w-full"
@@ -79,6 +113,9 @@ const page = () => {
           Choose a visibility option:
         </Label>
         <select
+          onChange={(e) => {
+            setVisibility(e.target.value);
+          }}
           id="visibility"
           name="visibility"
           className="block w-full px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -94,6 +131,9 @@ const page = () => {
         <div className="flex gap-6">
           <div className="flex gap-3 items-center mt-2">
             <Input
+              onChange={(e) => {
+                setMadeForKids(e.target.value);
+              }}
               className="w-5 h-5"
               type="radio"
               value="yes"
@@ -103,6 +143,9 @@ const page = () => {
           </div>
           <div className="flex gap-3 items-center mt-2">
             <Input
+              onChange={(e) => {
+                setMadeForKids(e.target.value);
+              }}
               className="w-5 h-5"
               type="radio"
               value="no"
@@ -112,6 +155,10 @@ const page = () => {
           </div>
         </div>
       </div>
+
+      <Button onClick={handleUpload} type="submit">
+        Upload
+      </Button>
     </div>
   );
 };
