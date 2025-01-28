@@ -1,6 +1,8 @@
 import GoogleProvider from "next-auth/providers/google";
 import YouTubeProvider from "./yt-provider";
-import { AuthOptions } from "next-auth";
+import { Account, AuthOptions, User } from "next-auth";
+
+import prisma from "./db";
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -30,6 +32,32 @@ export const authOptions: AuthOptions = {
     }),
   ],
   callbacks: {
+    async signIn({ account, user }: { user: User; account: Account | null }) {
+      console.log("account", account);
+      console.log("user", user);
+      if (!account || !user) {
+        return false;
+      }
+      const data = await prisma?.user.upsert({
+        where: { email: user.email! },
+        update: {
+          accessToken: account?.access_token,
+          refreshToken: account?.refresh_token,
+          scopes: account.scope,
+          expiryDate: new Date(account?.expires_at || ""),
+        },
+        create: {
+          name: user.name!,
+          email: user.email!,
+          image: user.image,
+          accessToken: account?.access_token,
+          refreshToken: account?.refresh_token,
+          scopes: account.scope,
+          expiryDate: new Date(account?.expires_at!),
+        },
+      });
+      return true;
+    },
     jwt: ({ token, user }) => {
       if (user) {
         token.userId = user.id;
