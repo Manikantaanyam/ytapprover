@@ -1,14 +1,15 @@
 "use client";
-import { signIn, useSession } from "next-auth/react";
+import Navbar from "@/components/navbar";
+
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+
 export default function page() {
   const { data: session } = useSession();
+  const router = useRouter();
 
-  return (
-    <div>
-      <button onClick={() => signIn("youtube")}>Link Gmail and YouTube</button>
-      <p>hello</p>
-      <p>{JSON.stringify(session?.user)}</p>
-      <p>{session?.user?.email}</p>
-    </div>
-  );
+  if (!session) {
+    router.push("http://localhost:3000/");
+  }
+  return <div className="">dashboard</div>;
 }
